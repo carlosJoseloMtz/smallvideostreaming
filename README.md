@@ -17,3 +17,10 @@
 ## No considerado en lo absoluto
 
 * Optimización de streaming de video (estático/live).
+
+
+### Tecnologías a utilizar
+
+* Backend: NodeJS
+* Frontend: Polymer
+* Git... Obviamente :V
