@@ -1,0 +1,27 @@
+{
+  "name": "smallvideostreaming",
+  "version": "1.0.0",
+  "description": "Small Video Streaming with base user support",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlosJoseloMtz/smallvideostreaming.git"
+  },
+  "private": true,
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carlosJoseloMtz/smallvideostreaming/issues"
+  },
+  "homepage": "https://github.com/carlosJoseloMtz/smallvideostreaming#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.7.1",
+    "express": "^4.14.0",
+    "log4js": "^0.6.38",
+    "mongoose": "^4.5.8"
+  }
+}
