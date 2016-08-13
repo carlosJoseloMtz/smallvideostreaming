@@ -9,6 +9,9 @@ var cors = require('cors');
 var log4js = require('log4js');
 var appConfig = require('./config');
 
+// controller imports!
+var usersController = require('./src/routes/userscontroller');
+
 
 // configure the application logger level
 log4js.configure(appConfig.logger);
@@ -35,6 +38,10 @@ app.use(bodyParser.json());
 app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'auto' }));
 // cross site scripting
 app.use(cors());
+
+
+// hook here all your controllers directly to the app
+app.use(usersController());
 
 // server start!
 app.listen(appConfig.port);
