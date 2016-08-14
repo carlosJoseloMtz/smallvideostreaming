@@ -1,5 +1,6 @@
 # log files
 *.log
+*.log*
 # ignore the node_modules folder as it contains the installable code
 node_modules
 

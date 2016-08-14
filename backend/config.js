@@ -16,6 +16,7 @@ module.exports = {
           {
             "type": "file",
             "filename": "log/app.log",
+            "level": "debug",
             "maxLogSize": 10485760,
           }
         ]
