@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 // application logger
 var LOG = require('log4js').getLogger('app');
+var response = require('../dtos/responses');
 
 var USERS_PATH = '/users';
 
@@ -16,7 +17,7 @@ var routerController = {
     LOG.info('trying to create a user');
     LOG.info(req.body);
     console.log(req.body);
-    res.json({some: 'message'});
+    res.json(new response.Success({fake: 'data'}));
   },
 };
 
