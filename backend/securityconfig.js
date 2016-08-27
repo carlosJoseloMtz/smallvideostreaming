@@ -4,7 +4,7 @@ var security = {};
 * All routes that requires user to be logged in.
 */
 security.auth = [
-  '/users/:id',
+  '/users/privileges',
   '/institutes'
 ];
 
@@ -12,6 +12,7 @@ security.auth = [
 * All admin routes to be validated.
 */
 security.admin = [
+  '/users/privileges',
   '/institutes'
 ];
 
