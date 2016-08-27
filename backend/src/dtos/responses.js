@@ -1,6 +1,6 @@
 
 
-var transactionResponses = {
+var responses = {
 
   /**
   * Creates a JSON response with the data indicating the transaction failed,
@@ -20,4 +20,4 @@ var transactionResponses = {
   }
 };
 
-module.exports = transactionResponses;
+module.exports = responses;
