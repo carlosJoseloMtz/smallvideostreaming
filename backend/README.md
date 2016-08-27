@@ -8,7 +8,17 @@ To use the software on a DEV environment, follow the next steps:
 
 * `cd` all the way to this directory
 * Run `npm install` to install all the required modules (the package.json file already contains a list of the modules used)
-* Edit the *config.js* file based on your local requirements (actually the only thing you need to change is the *database* attribute to use your local mongodb service in case you are using a distinct port that the one used by default), this will not be necessary in the future but for now please **DO NOT** commit changes to the config file
+* Create a file called *local.js* that should look like this:
+  ```
+  /**
+  * Local configuration file.
+  * This file is ignored from the repository so that everyone can have their own
+  * database connection or any other local configuration required on the project.
+  */
+  module.exports = {
+    database: 'mongodb://localhost/streaming_test_db'
+  }
+  ```
 * Run `npm start` to get up the server
 * For now you can only register users using the following endpoint (make sure you send the content type with application/json value):
   - `POST` **/users**, expected json structure:

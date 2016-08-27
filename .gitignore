@@ -4,4 +4,7 @@
 # ignore the node_modules folder as it contains the installable code
 node_modules
 
+# ignore local configuration file for backend extension!
+backend/local.js
+
 # TODO add the rest of the required ignored files

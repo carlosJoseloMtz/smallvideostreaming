@@ -1,7 +1,8 @@
+var localConfig = require('./local.js');
 module.exports = {
   // TODO: change for STAGE and PROD environments
   port: 3030,
-  database: 'mongodb://localhost/streaming_test_db',
+  database: localConfig.database,
   logger: {
     "appenders": [
       {
