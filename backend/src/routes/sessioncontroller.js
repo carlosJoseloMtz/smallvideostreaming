@@ -15,6 +15,12 @@ var sessionController = {
   * Login for user, creates a session token for the client.
   */
   login: function (req, res) {
+
+    // in case of a user trying to login while having a valid session
+    if (req.user) {
+      return res.json(new response.Failed('You already started a session'));
+    }
+
     var _email = req.body.email,
         _pwd = req.body.password;
 
