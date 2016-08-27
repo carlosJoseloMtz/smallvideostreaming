@@ -76,7 +76,6 @@ var institutionController = {
     Institute.find({}).
       count((err, count) => {
         if (err) {
-          // TODO log errors
           LOG.error("Error while counting the total of institutes registered to the site");
           LOG.error(err);
           return res.json(new response.Failed('Error while trying to get institutes, please try again later'));
@@ -111,6 +110,33 @@ var institutionController = {
             return res.json(new response.Success(resultHolder));
           });
       });
+  },
+
+  /**
+  * Gets the information for a specific institute.
+  */
+  getInfo: function (req, res) {
+    let _id = req.params.id;
+
+    // check if the user info is not valid (for some reason)
+    if (commons.string.isBlank(_id)) {
+      return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find the institution you are looking for'));
+    }
+
+    Institute.findById(_id, (err, inst) => {
+      if (err) {
+        LOG.error("Error while trying to get institute " + _id);
+        LOG.error(err);
+        return res.json(new response.Failed('Error while trying to find the institute, please try again later'));
+      }
+
+      if (!inst) {
+        return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find the institution you are looking for'));
+      }
+
+      return res.json(new response.Success(inst));
+    });
+
   }
 };
 
@@ -121,5 +147,6 @@ var institutionController = {
 module.exports = function () {
   router.post(INSTITUTE_PATH, institutionController.create);
   router.get('/participants/institutes', institutionController.list);
+  router.get('/participants/institutes/:id', institutionController.getInfo);
   return router;
 };
