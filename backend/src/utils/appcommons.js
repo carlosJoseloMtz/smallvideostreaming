@@ -16,5 +16,12 @@ module.exports = {
     isBlank: function (str) {
       return !str || /^\s*$/.test(str);
     }
+  },
+
+  /**
+  * All the application status that may be used through out the application.
+  */
+  status: {
+    NOT_FOUND: 404
   }
 };
