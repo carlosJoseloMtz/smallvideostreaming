@@ -64,13 +64,18 @@ UserSchema.pre('save', function (next) {
 /**
 * Compares a password with an existing one on the database for a specific user.
 */
-UserSchema.methods.comparePassword = function (passw, cb) {
-  bcrypt.compare(passw, this.password, function (err, isMatch) {
-    if (err) {
-      return cb(err);
-    }
-    cb(null, isMatch);
+UserSchema.methods.comparePassword = function (passw) {
+  var selfPromise = new Promise((resolve, reject) => {
+    bcrypt.compare(passw, this.password, function (err, isMatch) {
+      if (err || !isMatch) {
+        reject();
+      } else {
+        resolve();
+      }
+    });
   });
+
+  return selfPromise;
 };
 
 module.exports = mongoose.model('User', UserSchema);

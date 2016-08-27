@@ -14,8 +14,8 @@ var sessionController = {
   * Login for user, creates a session token for the client.
   */
   login: function (req, res) {
-    var _email = req.email,
-        _pwd = req.password;
+    var _email = req.body.email,
+        _pwd = req.body.password;
 
     // if some of the parameters are just blank
     if (commons.string.isBlank(_email) || commons.string.isBlank(_pwd)) {
@@ -24,16 +24,22 @@ var sessionController = {
     }
 
     User.
-      findOne({email: _email, password: _pwd}).
+      findOne({email: _email}).
       exec((err, usr) => {
-        if (err) {
+        if (err || !usr) {
           LOG.error('error while trying to login for user ' + _email);
           LOG.error(err);
           return res.json(new response.Failed('Invalid email/password'));
         }
-        // TODO: create token for the user
-        // TODO: filter the elements of the user that we don't want to send back to the client
-        return res.json(new response.Success(usr))
+
+        usr.comparePassword(_pwd).
+          then(() => {
+            // TODO: create token for the user
+            // TODO: filter the elements of the user that we don't want to send back to the client
+            return res.json(new response.Success(usr));
+          }).catch(() => {
+            return res.json(new response.Failed('Invalid email/password'));
+          });
       });
   }
 };
