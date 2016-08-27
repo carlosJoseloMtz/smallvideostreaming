@@ -14,6 +14,7 @@ var authService = require('./src/services/authservice');
 // controller imports!
 var usersController = require('./src/routes/userscontroller');
 var sessionController = require('./src/routes/sessioncontroller');
+var institutionsController = require('./src/routes/institutionscontroller');
 
 
 // configure the application logger level
@@ -49,6 +50,7 @@ app.use(authService.admin());
 // hook here all your controllers directly to the app
 app.use(usersController());
 app.use(sessionController());
+app.use(institutionsController());
 
 // server start!
 app.listen(appConfig.port);

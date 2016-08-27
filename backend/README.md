@@ -32,3 +32,13 @@ To use the software on a DEV environment, follow the next steps:
 ## Watch
 
 Please **DO NOT** just commit changes directly to the config files, they should all have their pull requests.
+
+For now we can only create *student* users from the endpoint, if you want to test an endpoint that requires an admin user type, just go to your mongo db console and:
+```
+use streaming_test_db
+db.users.find({}) // pick the one you want to update
+db.users.update({email: 'nice@user.com'}, {$set: {userGroup: 'admin'}})
+// validate it
+db.users.find({email: 'nice@user.com'})
+```
+That way you only have to login again and get the new token, that token will have already the admin permissions for that user! Yay! :)
