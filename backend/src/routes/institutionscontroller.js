@@ -134,7 +134,15 @@ var institutionController = {
         return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find the institution you are looking for'));
       }
 
-      return res.json(new response.Success(inst));
+      // wrap the institute's information to avoid showing admin information
+      var _obj = {
+        rfc: inst.rfc,
+        email: inst.email,
+        name: inst.name,
+        inscriptionDate: inst.inscriptionDate
+      }
+
+      return res.json(new response.Success(_obj));
     });
 
   }
