@@ -23,5 +23,13 @@ module.exports = {
   */
   status: {
     NOT_FOUND: 404
+  },
+
+  /**
+  * Global pagination values.
+  */
+  pagination: {
+    RESULTS_PER_PAGE: 10,
+    START_INDEX: 0
   }
 };

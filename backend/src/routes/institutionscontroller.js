@@ -44,6 +44,47 @@ var institutionController = {
       // return just the id
       return res.json(new response.Success(inst.id));
     });
+  },
+
+  /**
+  * Lists all the institutes affiliated to the site.
+  */
+  list: function (req, res) {
+    var _page = req.query.page_index;
+
+    // validate the page provided
+    try {
+      _page = parseInt(_page);
+      if (_page < commons.pagination.START_INDEX) {
+        throw "Invalid page number";
+      }
+    } catch (err) {
+      LOG.error('Invalid page ' + _page);
+      LOG.error(err);
+      return res.json(new response.Failed('Invalid page number'));
+    }
+
+    var offset = _page === commons.pagination.START_INDEX ?
+                              commons.pagination.START_INDEX :
+                              (_page * commons.pagination.RESULTS_PER_PAGE);
+    Institute.
+      find({}).
+      skip(offset).
+      limit(commons.pagination.RESULTS_PER_PAGE).
+      exec((err, results) => {
+        if (err) {
+          LOG.error('Error while trying to get a set of institutions');
+          LOG.error(err);
+          return res.json(new response.Failed('Error while trying to get institutes, please try again later'));
+        }
+
+        if (!results || results.length === 0) {
+          LOG.warn("Did not find results for institutions on page " + _page);
+          return res.json(new response.Succes([]))
+        }
+
+        return res.json(new response.Success(results));
+      });
   }
 };
 
