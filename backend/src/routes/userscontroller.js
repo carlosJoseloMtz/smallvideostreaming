@@ -11,7 +11,7 @@ var User = require('../models/user');
 var USERS_PATH = '/users';
 var DEFAULT_REGISTRY_GROUP = 'student';
 
-var routerController = {
+var userController = {
 
   /**
   * Registers a new user to the site with basic privileges (student).
@@ -50,8 +50,11 @@ var routerController = {
   }
 };
 
-module.exports = function () {
-  router.post(USERS_PATH, routerController.create);
 
+/**
+* Expose all the request mappings with their corresponding handlers.
+*/
+module.exports = function () {
+  router.post(USERS_PATH, userController.create);
   return router;
 };

@@ -37,6 +37,10 @@ module.exports = {
   */
   auth: function () {
     var router = express.Router();
+    if (!securityConfig.auth || securityConfig.auth.length === 0) {
+      return router;
+    }
+
     router.all(securityConfig.auth, function (req, res, next) {
       if (!req.headers.authorization) {
         LOG.warn('A user is trying to access a resource without credentials')
