@@ -44,6 +44,73 @@ var institutionController = {
       // return just the id
       return res.json(new response.Success(inst.id));
     });
+  },
+
+  /**
+  * Lists all the institutes affiliated to the site.
+  */
+  list: function (req, res) {
+    let _page = req.query.page_index;
+
+    // validate the page provided
+    try {
+      _page = parseInt(_page);
+      if (_page < commons.pagination.START_INDEX) {
+        throw "Invalid page number";
+      }
+    } catch (err) {
+      LOG.error('Invalid page ' + _page);
+      LOG.error(err);
+      return res.json(new response.Failed('Invalid page number'));
+    }
+
+    let offset = _page === commons.pagination.START_INDEX ?
+                              commons.pagination.START_INDEX :
+                              (_page * commons.pagination.RESULTS_PER_PAGE);
+
+    // default result's object
+    let resultHolder = {
+      totalResults: 0,
+      items: []
+    };
+    Institute.find({}).
+      count((err, count) => {
+        if (err) {
+          // TODO log errors
+          LOG.error("Error while counting the total of institutes registered to the site");
+          LOG.error(err);
+          return res.json(new response.Failed('Error while trying to get institutes, please try again later'));
+        }
+
+        // check the count, and if this is just 0, don't even bother to hit the database again
+        if (count === 0) {
+          LOG.warn("Did not find results for institutions on page " + _page);
+          return res.json(new response.Success(resultHolder));
+        }
+        resultHolder.totalResults = count;
+
+        // actually run the query with filters
+        Institute.find({}).
+          skip(offset).
+          limit(commons.pagination.RESULTS_PER_PAGE).
+          exec((err, results) => {
+            if (err) {
+              LOG.error('Error while trying to get a set of institutions');
+              LOG.error(err);
+              return res.json(new response.Failed('Error while trying to get institutes, please try again later'));
+            }
+
+            // if for some reason we still get requests after the pagination finished
+            if (!results || results.length === 0) {
+              // log it so that we can analyze it later
+              LOG.warn("Did not find results for institutions on page " + _page);
+              return res.json(new response.Success(resultHolder))
+            }
+            resultHolder.items = results;
+            resultHolder.count = results.length;
+            return res.json(new response.Success(resultHolder));
+          });
+      });
   }
 };
 
@@ -53,5 +120,6 @@ var institutionController = {
 */
 module.exports = function () {
   router.post(INSTITUTE_PATH, institutionController.create);
+  router.get('/participants/institutes', institutionController.list);
   return router;
 };
