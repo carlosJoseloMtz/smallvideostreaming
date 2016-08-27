@@ -18,7 +18,7 @@ module.exports = {
     var _usr = {
       uid: user.id,
       email: user.email,
-      group: user.userGroup,
+      group: (!user.userGroup ? '' : user.userGroup),
     };
 
     var payload = {
