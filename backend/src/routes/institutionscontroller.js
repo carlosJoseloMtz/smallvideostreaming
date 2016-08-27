@@ -5,7 +5,7 @@ var router = express.Router();
 // application logger
 var LOG = require('log4js').getLogger('app');
 var response = require('../dtos/responses');
-var Institute = require('../models/user');
+var Institute = require('../models/institution');
 var commons = require('../utils/appcommons');
 // constants
 var INSTITUTE_PATH = '/institutes';
@@ -21,9 +21,9 @@ var institutionController = {
         _name = req.body.name,
         // get the user's id from the req.user.id (the one decoded by the token)
         _createdBy = req.user.uid;
-    if (commons.strings.isBlank(_rfc) ||
-          commons.strings.isBlank(_email) ||
-          commons.strings.isBlank(_name)) {
+    if (commons.string.isBlank(_rfc) ||
+          commons.string.isBlank(_email) ||
+          commons.string.isBlank(_name)) {
       return res.json(new response.Failed('Invalid request, make sure the information is properly filled'));
     }
 

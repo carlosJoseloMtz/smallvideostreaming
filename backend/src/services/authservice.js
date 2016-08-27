@@ -53,10 +53,10 @@ module.exports = {
 
       var payload = null;
       try {
-        payload = jwt.decode(token, appConfig.auth.secureToken);
+        payload = jwt.decode(token, securityConfig.base.secureToken);
       } catch (err) {
-        console.error('could not parse token', token);
         LOG.error('Someone is trying to use an invalid token! ' + token);
+        LOG.error(err);
         return res.status(401).json({message: 'Invalid token'});
       }
 
