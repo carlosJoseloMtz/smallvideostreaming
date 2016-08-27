@@ -109,8 +109,15 @@ var userController = {
         return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find the user you are looking for'));
       }
 
-      // TODO: wrap the user's information in a separate json object so that the password and __v attributes are not passed to the client
-      var _res = usr;
+      // wrap the user's information in a separate json object so that the password and __v attributes are not passed to the client
+      var _res = {
+        _id: usr._id,
+        email: usr.email,
+        name: usr.name,
+        lastName: usr.lastName,
+        userGroup: usr.userGroup,
+        entity: usr.entity
+      };
       return res.json(new response.Success(_res));
     })
   }
