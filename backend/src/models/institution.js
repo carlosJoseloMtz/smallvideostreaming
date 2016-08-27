@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var LOG = require('log4js').getLogger('app');
 
 // define the institution schema
 var InstitutionSchema = new Schema({
