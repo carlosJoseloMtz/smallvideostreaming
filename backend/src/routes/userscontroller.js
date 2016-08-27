@@ -5,6 +5,7 @@ var router = express.Router();
 // application logger
 var LOG = require('log4js').getLogger('app');
 var response = require('../dtos/responses');
+var commons = require('../utils/appcommons');
 var User = require('../models/user');
 
 // constants
@@ -47,6 +48,42 @@ var userController = {
 
       return res.json(new response.Success('Thanks for registering to this site, a confirmation email will be sent to your email, please check it out to use your account'));
     });
+  },
+
+  /**
+  * Grants privileges for users based on the following:
+  *   - No user will be granted admin permissions.
+  *   - Only following string literals are allowed for groupType: 'student', 'author'.
+  *   - Only for admin users
+  */
+  grantPrivileges: function (req, res) {
+    var _id = req.body.user,
+        _userGroup = req.body.userGroup;
+
+    // invalid data
+    if (commons.string.isBlank(_id) || commons.string.isBlank(_userGroup)) {
+      return res.json(new response.Failed("Please make sure the data is correct"));
+    }
+    // invalid user groups assignment
+    if (_userGroup !== 'author' && _userGroup !== 'student') {
+      return res.json(new response.Failed('Invalid group for user'));
+    }
+
+    // update the user
+    User.update({ _id: _id }, { $set: { userGroup: _userGroup}}, (err, status) => {
+      if (err) {
+        LOG.error('Error while granting privileges');
+        LOG.error(err);
+        return res.json(new response.Failed('Error while trying to update user privileges, please try later'));
+      }
+
+      // did not update any records, could also be that the value to be set already was setup
+      if (status.nModified === 0) {
+        return res.json(new response.Failed('Did not find any matching user to be updated'));
+      }
+
+      return res.json(new response.Success('Successfully upudated user'));
+    });
   }
 };
 
@@ -56,5 +93,6 @@ var userController = {
 */
 module.exports = function () {
   router.post(USERS_PATH, userController.create);
+  router.put(USERS_PATH + "/privileges", userController.grantPrivileges)
   return router;
 };
