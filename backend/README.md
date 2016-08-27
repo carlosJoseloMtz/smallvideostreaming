@@ -28,3 +28,7 @@ To use the software on a DEV environment, follow the next steps:
 
 * Latest version of node
 * MongoDB
+
+## Watch
+
+Please **DO NOT** just commit changes directly to the config files, they should all have their pull requests.
