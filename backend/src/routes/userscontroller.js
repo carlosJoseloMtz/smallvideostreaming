@@ -84,6 +84,42 @@ var userController = {
 
       return res.json(new response.Success('Successfully upudated user'));
     });
+  },
+
+  /**
+  * Gets the user information.
+  */
+  userInfo: function (req, res) {
+    var _id = req.params.id;
+
+    // if this is not a valid id
+    if (commons.string.isBlank(_id)) {
+      // just return the 404
+      return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find user'));
+    }
+
+    User.findById(_id, (err, usr) => {
+      if (err) {
+        LOG.error('Error while trying to find user ' + _id);
+        LOG.error(err);
+        return res.json(new response.Failed('Error while trying to get the user information, please try again later'));
+      }
+
+      if (!usr) {
+        return res.status(commons.status.NOT_FOUND).json(new response.Failed('Could not find the user you are looking for'));
+      }
+
+      // wrap the user's information in a separate json object so that the password and __v attributes are not passed to the client
+      var _res = {
+        _id: usr._id,
+        email: usr.email,
+        name: usr.name,
+        lastName: usr.lastName,
+        userGroup: usr.userGroup,
+        entity: usr.entity
+      };
+      return res.json(new response.Success(_res));
+    })
   }
 };
 
@@ -93,6 +129,7 @@ var userController = {
 */
 module.exports = function () {
   router.post(USERS_PATH, userController.create);
-  router.put(USERS_PATH + "/privileges", userController.grantPrivileges)
+  router.put(USERS_PATH + "/privileges", userController.grantPrivileges);
+  router.get(USERS_PATH + "/:id", userController.userInfo);
   return router;
 };
