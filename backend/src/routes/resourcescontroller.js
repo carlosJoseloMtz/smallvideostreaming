@@ -1,6 +1,7 @@
 let express = require('express');
 let LOG = require('log4js').getLogger('app');
 let categoryService = require('../services/categoryservice');
+let resourceService = require('../services/resourceservice');
 
 // required models for this to work
 let Resource = require('../models/resource');
@@ -48,14 +49,29 @@ let resourcesController = {
   /**
   * Uploads the static file resource.
   */
-  uploadResource: function () {
-    // TODO
+  uploadResource: function (req, res) {
+    let _id = req.params.id;
+
+    Resource.findById(_id, (err, rsrc) => {
+      if (err || !rsrc) {
+        LOG.error('Could not find the given resource');
+        LOG.error(err);
+        return res.status(404).json(new response.Failed('Sorry, but we could not find any related resource'));
+      }
+
+      resourceService.uploadFile(rsrc)
+        .then(() => {
+          return res.json(new response.Success('File was successfully uploaded'));
+        }).catch(() => {
+          return res.json(new response.Failed('Error while trying to update the file'));
+        });
+    });
   }
 };
 
 module.exports = function () {
   let router = express.Router();
   router.post(RESOURCE_PATH, resourcesController.create);
-  // router.put(RESOURCE_PATH + '/:id/static', resourcesController.uploadResource);
+  router.put(RESOURCE_PATH + '/:id/static', resourcesController.uploadResource);
   return router;
 }

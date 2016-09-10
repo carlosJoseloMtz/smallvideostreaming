@@ -18,6 +18,11 @@ var ResourceSchema = new Schema({
     ref: 'Institution',
     required: true
   },
+  // where the file is located at
+  path: {
+    type: String
+  },
+
   tags: [{ type: String }],
 
   // the people involved on this resource
