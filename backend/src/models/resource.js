@@ -15,9 +15,10 @@ var ResourceSchema = new Schema({
   // the institution which owns this resource
   institution: {
     type: Schema.Types.ObjectId,
-    ref: 'Institution'
+    ref: 'Institution',
+    required: true
   },
-  tags: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+  tags: [{ type: String }],
 
   // the people involved on this resource
   authors: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
@@ -29,7 +30,8 @@ var ResourceSchema = new Schema({
   // who created this resource
   createdBy: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   // When this was created
   createdAt: {
