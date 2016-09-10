@@ -5,7 +5,8 @@ var security = {};
 */
 security.auth = [
   '/users/privileges',
-  '/institutes'
+  '/institutes',
+  '/resources'
 ];
 
 /**
@@ -13,7 +14,8 @@ security.auth = [
 */
 security.admin = [
   '/users/privileges',
-  '/institutes'
+  '/institutes',
+  '/resources'
 ];
 
 /**

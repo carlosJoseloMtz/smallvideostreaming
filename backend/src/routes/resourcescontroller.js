@@ -1,11 +1,11 @@
 let express = require('express');
 let LOG = require('log4js').getLogger('app');
+let categoryService = require('../services/categoryservice');
 
 // required models for this to work
 let Resource = require('../models/resource');
-let Category = require('../models/category');
 let commons = require('../utils/appcommons');
-var response = require('../dtos/responses');
+let response = require('../dtos/responses');
 
 // constants
 let RESOURCE_PATH = '/resources';
@@ -33,32 +33,16 @@ let resourcesController = {
     });
 
     nRsrc.save((err, rsrc) => {
-      if (err) {
+      if (err || !rsrc) {
         LOG.error('Error while trying to create a new resource');
         LOG.error(err);
-        return res.json(new response.Failed('Could no create the resource, please try later')):
+        return res.json(new response.Failed('Could no create the resource, please try later'));
       }
+      // insert the elements asynchronously with no catching errors
+      categoryService.upsertElements(_tags);
 
-      let nTags = [];
-
-      // get all the new tags
-      _tags.forEach((el) => {
-        let _tg = new Category({ tag: el });
-        nTags.push(_tg);
-      });
-
-      // update the tag files
-      Category.update(
-        { tag: { '$in': nTags } },
-        { '$upsert': true },
-        (err) => {
-          if (err) {
-            LOG.error('Error while trying to insert the tags of the just created resource ' + rsrc.id);
-            // nothing else to do
-          }
-        }
-      )
-    })
+      return res.json(new response.Success(rsrc));
+    });
   },
 
   /**

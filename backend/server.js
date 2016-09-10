@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 // log the endpoints hits
 var cors = require('cors');
-// overall app's logger component
+// overall app's LOG component
 var log4js = require('log4js');
 var appConfig = require('./config');
 
@@ -15,11 +15,12 @@ var authService = require('./src/services/authservice');
 var usersController = require('./src/routes/userscontroller');
 var sessionController = require('./src/routes/sessioncontroller');
 var institutionsController = require('./src/routes/institutionscontroller');
+var resourcesController = require('./src/routes/resourcescontroller');
 
 
-// configure the application logger level
+// configure the application LOG level
 log4js.configure(appConfig.logger);
-var logger = log4js.getLogger('app');
+var LOG = log4js.getLogger('app');
 
 // use the native promise support
 mongoose.Promise = global.Promise;
@@ -27,8 +28,8 @@ mongoose.Promise = global.Promise;
 // DB connection
 mongoose.connect(appConfig.database, function (err) {
   if (err) {
-    logger.error('Error while connecting to mongodb database, please check the service and connection');
-    logger.error(err);
+    LOG.error('Error while connecting to mongodb database, please check the service and connection');
+    LOG.error(err);
   }
 });
 
@@ -51,11 +52,12 @@ app.use(authService.admin());
 app.use(usersController());
 app.use(sessionController());
 app.use(institutionsController());
+app.use(resourcesController());
 
 // server start!
 app.listen(appConfig.port);
 
 var startUpMessage = 'Application got up on port ' + appConfig.port + ' at ' + (new Date());
-logger.info(startUpMessage);
+LOG.info(startUpMessage);
 // TODO remove this, looks nice only for development :P
 console.log(startUpMessage);
