@@ -3,6 +3,7 @@ module.exports = {
   // TODO: change for STAGE and PROD environments
   port: 3030,
   database: localConfig.database,
+  pathToFiles: localConfig.pathToFiles,
   logger: {
     "appenders": [
       {
