@@ -1,21 +1,35 @@
-let LOG = require('log4js').getLogger('app');
-let localConfig = require('../../local');
-let commons = require('../utils/appcommons');
-let fileContainer = localConfig.pathToFiles;
+const LOG = require('log4js').getLogger('app');
+const config = require('../../config');
+const fs = require('fs');
+const commons = require('../utils/appcommons');
+const fileContainer = config.pathToFiles;
 
 module.exports = {
-  uploadFile: function (resource) {
+  uploadFile: function (resource, fileFromClient) {
     let fileUploadPromise = new Promise((resolve, reject) => {
-      LOG.info('resource');
-      LOG.info(resource);
       // if there is a previous resource related
       if (!commons.string.isBlank(resource.path)) {
-        // TODO: remove the  previous file!
+        console.log('trying to remove a previous resource path');
+        fs.unlink(resource.path, (err) => {
+          if (err) {
+            LOG.error("Could not remove the previous file related to the resource");
+            LOG.error(err);
+          }
+        })
         LOG.info('Removed the previously related resource!');
-        // TODO: catch any error to call reject method
       }
-      LOG.info('file uploaded!');
-      resolve();
+
+      resource.path = fileFromClient.path;
+      resource.save((err) => {
+        if (err) {
+          LOG.error("could not update the resource?");
+          LOG.error(err);
+          reject();
+        }
+        LOG.info('file uploaded!');
+        resolve();
+      })
+
     });
     return fileUploadPromise;
   }

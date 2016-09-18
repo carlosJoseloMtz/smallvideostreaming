@@ -7,7 +7,7 @@ var cors = require('cors');
 // overall app's LOG component
 var log4js = require('log4js');
 var appConfig = require('./config');
-let multer = require('multer');
+var multer = require('multer');
 
 // authentication components
 var authService = require('./src/services/authservice');
@@ -47,6 +47,7 @@ app.use(bodyParser.json());
 app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'auto' }));
 // cross site scripting
 app.use(cors());
+app.use(multer({ dest: appConfig.pathToFiles }).any());
 
 // authentication filters
 app.use(authService.auth());

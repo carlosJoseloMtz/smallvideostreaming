@@ -51,6 +51,18 @@ let resourcesController = {
   */
   uploadResource: function (req, res) {
     let _id = req.params.id;
+    let fileFromClient = null;
+
+    let _filter = (element) => {
+      return element.fieldname === 'fileFromClient';
+    };
+    // TODO: validate this is a video file
+    if (!req.files || req.files.length == 0 || req.files.filter(_filter).length === 0) {
+      return res.json(new response.Failed('No valid file was found'));
+    }
+
+    // get the specific file
+    fileFromClient = req.files.filter(_filter)[0];
 
     Resource.findById(_id, (err, rsrc) => {
       if (err || !rsrc) {
@@ -59,7 +71,7 @@ let resourcesController = {
         return res.status(404).json(new response.Failed('Sorry, but we could not find any related resource'));
       }
 
-      resourceService.uploadFile(rsrc)
+      resourceService.uploadFile(rsrc, fileFromClient)
         .then(() => {
           return res.json(new response.Success('File was successfully uploaded'));
         }).catch(() => {
